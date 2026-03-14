@@ -101,8 +101,10 @@ if (-not (Get-Process -Name "ollama" -ErrorAction SilentlyContinue)) {
 }
 Write-Host "[OK] Ollama" -ForegroundColor Green
 
-# Stop old gateway
-openclaw gateway stop 2>$null | Out-Null
+# Kill old gateway silently (no flashing windows)
+$gwProc = Get-NetTCPConnection -LocalPort 18789 -ErrorAction SilentlyContinue |
+          Select-Object -ExpandProperty OwningProcess -Unique
+if ($gwProc) { $gwProc | ForEach-Object { Stop-Process -Id $_ -Force -ErrorAction SilentlyContinue } }
 
 # Fresh session (memory lives in files, not chat history)
 $sessDir = "$env:USERPROFILE\.openclaw\agents\main\sessions"
