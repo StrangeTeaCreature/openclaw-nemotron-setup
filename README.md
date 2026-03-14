@@ -119,15 +119,6 @@ Write-Host "http://localhost:18789/#token=ollama" -ForegroundColor Blue
 Write-Host "========================================" -ForegroundColor Cyan
 Write-Host ""
 
-# Auto-set think high after gateway starts
-Start-Job -ScriptBlock {
-    while (-not (Test-NetConnection -ComputerName 127.0.0.1 -Port 18789 -WarningAction SilentlyContinue).TcpTestSucceeded) {
-        Start-Sleep -Seconds 2
-    }
-    Start-Sleep -Seconds 3
-    openclaw agent -m "/think high" --thinking high 2>$null
-} | Out-Null
-
 ollama launch openclaw --model nemotron-3-super:cloud --yes
 ```
 
@@ -205,3 +196,4 @@ NVIDIA Cloud (Nemotron 3 Super runs here)
 ## Credits
 
 Setup guide by [@StrangeTeaCreature](https://github.com/StrangeTeaCreature) with help from Claude Code.
+
