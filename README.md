@@ -67,7 +67,7 @@ This enables maximum reasoning depth for complex tasks.
 Save as `OpenClaw-Start.ps1` and run with PowerShell 7:
 
 ```powershell
-# Fullscreen (F11 in Windows Terminal)
+# Maximize window (keeps taskbar accessible)
 Add-Type -TypeDefinition @"
 using System;
 using System.Runtime.InteropServices;
@@ -75,18 +75,12 @@ public class Win32 {
     [DllImport("user32.dll")]
     public static extern IntPtr GetForegroundWindow();
     [DllImport("user32.dll")]
-    public static extern bool SetForegroundWindow(IntPtr hWnd);
-    [DllImport("user32.dll", SetLastError = true)]
-    public static extern void keybd_event(byte bVk, byte bScan, uint dwFlags, UIntPtr dwExtraInfo);
+    public static extern bool ShowWindow(IntPtr hWnd, int nCmdShow);
 }
 "@
 
 $hwnd = [Win32]::GetForegroundWindow()
-[Win32]::SetForegroundWindow($hwnd) | Out-Null
-# F11 = native fullscreen in Windows Terminal
-[Win32]::keybd_event(0x7A, 0, 0, [UIntPtr]::Zero)
-Start-Sleep -Milliseconds 50
-[Win32]::keybd_event(0x7A, 0, 2, [UIntPtr]::Zero)
+[Win32]::ShowWindow($hwnd, 3) | Out-Null  # 3 = SW_MAXIMIZE
 
 $Host.UI.RawUI.WindowTitle = "OpenClaw + Nemotron 3 Super"
 $env:OLLAMA_MODELS = "E:\ollama\models"  # Change to your preferred drive
