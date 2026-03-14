@@ -32,8 +32,10 @@ if (-not (Get-Process -Name "ollama" -ErrorAction SilentlyContinue)) {
 }
 Write-Host "[OK] Ollama" -ForegroundColor Green
 
-# Убиваем старый gateway
-openclaw gateway stop 2>$null | Out-Null
+# Убиваем старый gateway (тихо, без мигающих окон)
+$gwProc = Get-NetTCPConnection -LocalPort 18789 -ErrorAction SilentlyContinue |
+          Select-Object -ExpandProperty OwningProcess -Unique
+if ($gwProc) { $gwProc | ForEach-Object { Stop-Process -Id $_ -Force -ErrorAction SilentlyContinue } }
 
 # Чистим историю чатов — память живёт в файлах (USER.md, MEMORY.md, memory/)
 # AGENTS.md сам говорит: "You wake up fresh each session"
