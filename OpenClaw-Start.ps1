@@ -50,15 +50,4 @@ Write-Host "    Web UI: " -NoNewline; Write-Host "http://localhost:18789/#token=
 Write-Host "========================================" -ForegroundColor Cyan
 Write-Host ""
 
-# Запускаем OpenClaw, а после того как gateway поднимется — ставим think high
-Start-Job -ScriptBlock {
-    # Ждём gateway
-    while (-not (Test-NetConnection -ComputerName 127.0.0.1 -Port 18789 -WarningAction SilentlyContinue).TcpTestSucceeded) {
-        Start-Sleep -Seconds 2
-    }
-    Start-Sleep -Seconds 3
-    # Отправляем /think high через CLI
-    openclaw agent -m "/think high" --thinking high 2>$null
-} | Out-Null
-
 ollama launch openclaw --model nemotron-3-super:cloud --yes
