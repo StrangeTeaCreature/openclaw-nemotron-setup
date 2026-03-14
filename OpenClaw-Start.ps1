@@ -50,4 +50,23 @@ Write-Host "    Web UI: " -NoNewline; Write-Host "http://localhost:18789/#token=
 Write-Host "========================================" -ForegroundColor Cyan
 Write-Host ""
 
+# Auto /think high — скрытый процесс ждёт gateway и отправляет команду
+$thinkScript = @"
+`$sw = [System.Diagnostics.Stopwatch]::StartNew()
+while (`$sw.Elapsed.TotalSeconds -lt 120) {
+    try {
+        `$tcp = New-Object System.Net.Sockets.TcpClient
+        `$tcp.Connect('127.0.0.1', 18789)
+        `$tcp.Close()
+        Start-Sleep -Seconds 5
+        openclaw agent -m '/think high' 2>`$null
+        break
+    } catch {
+        Start-Sleep -Seconds 3
+    }
+}
+"@
+$thinkScript | Out-File "$env:TEMP\openclaw-think-high.ps1" -Encoding utf8
+Start-Process pwsh -ArgumentList '-NoProfile', '-WindowStyle', 'Hidden', '-File', "$env:TEMP\openclaw-think-high.ps1" -WindowStyle Hidden
+
 ollama launch openclaw --model nemotron-3-super:cloud --yes
