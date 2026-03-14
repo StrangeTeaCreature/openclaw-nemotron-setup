@@ -64,21 +64,29 @@ This enables maximum reasoning depth for complex tasks.
 
 ## One-Click Launch Script
 
-Save as `OpenClaw Start.ps1` and run with PowerShell 7:
+Save as `OpenClaw-Start.ps1` and run with PowerShell 7:
 
 ```powershell
-# Fullscreen
+# Fullscreen (F11 in Windows Terminal)
 Add-Type -TypeDefinition @"
 using System;
 using System.Runtime.InteropServices;
 public class Win32 {
     [DllImport("user32.dll")]
-    public static extern bool ShowWindow(IntPtr hWnd, int nCmdShow);
-    [DllImport("kernel32.dll")]
-    public static extern IntPtr GetConsoleWindow();
+    public static extern IntPtr GetForegroundWindow();
+    [DllImport("user32.dll")]
+    public static extern bool SetForegroundWindow(IntPtr hWnd);
+    [DllImport("user32.dll", SetLastError = true)]
+    public static extern void keybd_event(byte bVk, byte bScan, uint dwFlags, UIntPtr dwExtraInfo);
 }
 "@
-[Win32]::ShowWindow([Win32]::GetConsoleWindow(), 3) | Out-Null
+
+$hwnd = [Win32]::GetForegroundWindow()
+[Win32]::SetForegroundWindow($hwnd) | Out-Null
+# F11 = native fullscreen in Windows Terminal
+[Win32]::keybd_event(0x7A, 0, 0, [UIntPtr]::Zero)
+Start-Sleep -Milliseconds 50
+[Win32]::keybd_event(0x7A, 0, 2, [UIntPtr]::Zero)
 
 $Host.UI.RawUI.WindowTitle = "OpenClaw + Nemotron 3 Super"
 $env:OLLAMA_MODELS = "E:\ollama\models"  # Change to your preferred drive
