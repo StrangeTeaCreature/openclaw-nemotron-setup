@@ -1,3 +1,19 @@
+> [!CAUTION]
+> # 🗑️ МУСОР — УДАЛИТЬ ЭТОТ РЕПОЗИТОРИЙ / TRASH — DELETE THIS REPO
+>
+> **Помечено 2026-08-20. Не использовать, не развивать — просто удалить.**
+>
+> Почему это больше не нужно:
+> - OpenClaw-стек (OpenClaw + Nemotron 3 Super через Ollama) уже не актуален и никому особо не интересен.
+> - Уже есть **Hermes Agent** — этот сетап полностью заменён им.
+> - Всё «как, куда, зачем и почему» уже расписано в лучших местах, чем здесь.
+> - Изначально это были чисто личные заметки «для себя», выложенные сюда без особой причины.
+>
+> Everything below is obsolete personal setup notes kept only for reference until deletion.
+> Do not use this — delete the repository.
+
+---
+
 # OpenClaw + NVIDIA Nemotron 3 Super — Free AI Agent Setup
 
 Run **OpenClaw** with **NVIDIA Nemotron 3 Super** for free. The model runs in NVIDIA's cloud — no GPU required on your machine.
